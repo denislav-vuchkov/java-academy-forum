@@ -1,0 +1,44 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.forum'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'mysql:mysql-connector-java'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
+
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+    // https://mvnrepository.com/artifact/org.webjars/jquery
+    implementation group: 'org.webjars', name: 'jquery', version: '3.6.0'
+
+    //For Gradle, add to dependencies section of build.gradle
+    implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.30.0'
+    implementation group: 'com.cloudinary', name: 'cloudinary-taglib', version: '1.30.0'
+
+    //For email verification
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.6.4'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

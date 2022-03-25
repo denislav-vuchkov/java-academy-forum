@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admins</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}">
+
+    <!--Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!--jQuery and Data Tables-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+<main>
+
+    <div class = "searchAndSort" id="random">
+
+        <div class ="formOverAllHeading">
+            <p>Search and sort results</p>
+        </div>
+
+        <form class = "formBox" th:action="@{/admins}" th:object="${filterDTO}" method="post">
+            <div class ="formHeading">
+                <p>Filter results by:</p>
+            </div>
+            <div class="mb-3">
+                <label for="inputUsername" class="form-label">Username</label>
+                <input th:field="*{username}" type="text" class="form-control" id="inputUsername" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="inputFirstName" class="form-label">First name</label>
+                <input th:field="*{firstName}" type="text" class="form-control" id="inputFirstName">
+            </div>
+            <div class="mb-3">
+                <label for="inputLastName" class="form-label">Email</label>
+                <input th:field="*{email}" type="text" class="form-control" id="inputLastName" aria-describedby="emailHelp">
+            </div>
+            <div class ="formHeading">
+                <p>Sort by:</p>
+            </div>
+            <div class ="formSubheading">
+                <p>Order by:</p>
+            </div>
+            <select th:field="*{sortBy}" class="form-select" aria-label="Default select example">
+                <option selected value="username">Username (default)</option>
+                <option value="first_name">First name</option>
+                <option value="last_name">Last name</option>
+                <option value="email">Email</option>
+                <option value="registration_date">Time of registration</option>
+            </select>
+            <div class ="formSubheading">
+                <p>
+                    Sort order:
+                    <br>
+                    (sort order will only work when a sort criteria have also been selected)
+                </p>
+            </div>
+            <select th:field="*{sortOrder}" class="form-select" aria-label="Default select example">
+                <option selected value="asc">Ascending (default)</option>
+                <option value="desc">Descending</option>>
+            </select>
+            <button type="submit" class="btn btn-outline-primary">Filter and sort</button>
+        </form>
+
+    </div>
+
+
+    <div class="table" id="tableDiv">
+        <table class="table table-fluid display cell-border" id="myTable">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">First name</th>
+                <th scope="col">Last name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Date of registration</th>
+                <th scope="col">Role (admin/regular)</th>
+                <th scope="col">Phone number</th>
+                <th scope="col">Status (active/inactive)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="admin, iterator : ${admins}">
+                <th th:text="${iterator.index} + 1" scope="row"></th>
+                <td>
+                    <a th:href="@{/users/{id}(id=${admin.getId()})}"> <button style="width: 140px; margin-top: 0; margin-bottom: 0" type="button" class="btn btn-outline-dark btn-sm"><b th:text="${admin.getUsername()}" style="font-size: 14px; text-align: left !important;">Dummy username</b></button></a>
+                </td>
+                <td th:text="${admin.getFirstName}"></td>
+                <td th:text="${admin.getLastName}"></td>
+                <td th:text="${admin.getEmail}"></td>
+                <td th:text="${admin.getRegistrationTime.toLocalDate()}"></td>
+                <td>
+                    <span th:if="${admin.isAdmin() == true}">Administrator</span>
+                    <span th:unless="${admin.isAdmin() == true}">Regular user</span>
+                </td>
+                <td>
+                    <span th:if="${admin.getPhoneNumber() == null}">No available number</span>
+                    <span th:unless="${admin.getPhoneNumber() == null}" th:text="${admin.getPhoneNumber().getNumber()}"></span>
+                </td>
+                <td>
+                    <span th:if="${admin.isBlocked() == true || admin.isDeleted() == true}">Inactive</span>
+                    <span th:unless="${admin.isBlocked() == true || admin.isDeleted() == true}">Active</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="clearfix"></div>
+
+</main>
+
+<footer th:replace="footer.html :: footer">  </footer>
+
+<script>
+    $.extend( $.fn.dataTable.defaults, {
+        searching: false,
+        ordering:  false
+    } );
+</script>
+
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>
+
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modify Rights Option 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}">
+
+    <!--Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+
+    <!--jQuery and Data Tables-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+<main>
+
+    <div class="searchAndSort" id="random">
+
+        <div class="formOverAllHeading">
+            <p>Search and sort results</p>
+        </div>
+
+        <form class = "formBox" th:action="@{/admins/v2/modify}" th:object="${filterDTO}" method="post">
+            <div class ="formHeading">
+                <p>Filter results by:</p>
+            </div>
+            <div class="mb-3">
+                <label for="inputUsername" class="form-label">Username</label>
+                <input th:field="*{username}" type="text" class="form-control" id="inputUsername" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="inputFirstName" class="form-label">First name</label>
+                <input th:field="*{firstName}" type="text" class="form-control" id="inputFirstName">
+            </div>
+            <div class="mb-3">
+                <label for="inputLastName" class="form-label">Email</label>
+                <input th:field="*{email}" type="text" class="form-control" id="inputLastName" aria-describedby="emailHelp">
+            </div>
+            <div class ="formHeading">
+                <p>Sort by:</p>
+            </div>
+            <div class ="formSubheading">
+                <p>Order by:</p>
+            </div>
+            <select th:field="*{sortBy}" class="form-select" aria-label="Default select example">
+                <option selected value="registration_date">Time of registration (default)</option>
+                <option value="username">Username</option>
+                <option value="first_name">First name</option>
+                <option value="last_name">Last name</option>
+                <option value="email">Email</option>
+            </select>
+            <div class ="formSubheading">
+                <p>
+                    Sort order:
+                    <br>
+                    (sort order will only work when a sort criteria have also been selected)
+                </p>
+            </div>
+            <select th:field="*{sortOrder}" class="form-select" aria-label="Default select example">
+                <option selected value="asc">Ascending (default)</option>
+                <option value="desc">Descending</option>>
+            </select>
+            <button type="submit" class="btn btn-outline-primary">Filter and sort</button>
+        </form>
+
+    </div>
+
+
+    <div class="table" id="tableDiv">
+        <table class="table table-fluid display cell-border" id="myTable">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Role (admin/regular)</th>
+                <th scope="col">Modify admin rights</th>
+                <th scope="col">Blocked</th>
+                <th scope="col">Block/unblock</th>
+                <th scope="col">Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user, iterator : ${users}">
+                <th th:text="${iterator.index} + 1" scope="row"></th>
+                <td>
+                    <a th:href="@{/users/{id}(id=${user.getId()})}"> <button style="width: 140px; margin-top: 0; margin-bottom: 0" type="button" class="btn btn-outline-dark btn-sm"><b th:text="${user.getUsername()}" style="font-size: 14px; text-align: left !important;">Dummy username</b></button></a>
+                </td>
+                <td>
+                    <span th:if="${user.isAdmin() == true}">Administrator</span>
+                    <span th:unless="${user.isAdmin() == true}">Regular user</span>
+                </td>
+
+                <td th:if="${user.isDeleted() == true || user.isBlocked() == true}">
+
+                    <p style="text-align: center">N/A</p>
+
+                </td>
+
+                <td th:unless="${user.isDeleted() == true || user.isBlocked() == true}">
+
+                    <div th:if="${user.isAdmin() == false}">
+                        <form class="formBox modifyButton" action="#"
+                              th:action="@{/admins/v2/modify/{id}/grant-rights(id=${user.getId()})}" method="post">
+                            <div class="mb-3" style="visibility: hidden !important; display: none !important">
+                                <label class="form-label"
+                                       style="visibility: hidden !important; display: none !important"></label>
+                                <input type="text" class="form-control" th:value="${user.getId()}"
+                                       style="visibility: hidden !important; display: none !important">
+                            </div>
+                            <button type="submit" class="btn btn-outline-success modifyButton" id="make-admin-btn">Grant
+                            </button>
+                        </form>
+                    </div>
+                    <div th:unless="${user.isAdmin() == false}">
+                        <form class="formBox modifyButton" action="#"
+                              th:action="@{/admins/v2/modify/{id}/remove-rights(id=${user.getId()})}" method="post">
+                            <div class="mb-3" style="visibility: hidden !important; display: none !important">
+                                <label class="form-label"
+                                       style="visibility: hidden !important; display: none !important"></label>
+                                <input type="text" class="form-control" th:value="${user.getId()}"
+                                       style="visibility: hidden !important; display: none !important">
+                            </div>
+                            <button type="submit" class="btn btn-outline-danger modifyButton" id="remove-admin-btn">
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+
+                </td>
+
+                <td th:if="${user.isDeleted() == false}">
+
+                    <div th:if="${user.isBlocked() == true}" style="text-align: center">Yes</div>
+                    <div th:unless="${user.isBlocked() == true}" style="text-align: center">No</div>
+
+                </td>
+
+                <td th:unless="${user.isDeleted() == false}">
+
+                    <p style="text-align: center">N/A</p>
+
+                </td>
+
+
+                <td th:if="${user.isAdmin() == true || user.isDeleted()}">
+
+                    <p style="text-align: center">N/A</p>
+
+                </td>
+
+                <td th:unless="${user.isAdmin() == true || user.isDeleted()}">
+
+                    <div th:if="${user.isBlocked() == true}">
+                        <form class="formBox modifyButton"
+                              th:action="@{/admins/v2/modify/{id}/unblock(id=${user.getId()})}" method="post">
+                            <div class="mb-3" style="visibility: hidden !important; display: none !important">
+                                <label class="form-label"
+                                       style="visibility: hidden !important; display: none !important"></label>
+                                <input type="text" class="form-control" th:value="${user.getId()}"
+                                       style="visibility: hidden !important; display: none !important">
+                            </div>
+                            <button type="submit" class="btn btn-outline-success modifyButton" id="unblock-btn">Unblock
+                            </button>
+                        </form>
+                    </div>
+                    <div th:unless="${user.isBlocked() == true}">
+                        <form class="formBox modifyButton" th:action="@{/admins/v2/modify/{id}/block(id=${user.getId()})}"
+                              method="post">
+                            <div class="mb-3" style="visibility: hidden !important; display: none !important">
+                                <label class="form-label"
+                                       style="visibility: hidden !important; display: none !important"></label>
+                                <input type="text" class="form-control" th:value="${user.getId()}"
+                                       style="visibility: hidden !important; display: none !important">
+                            </div>
+                            <button type="submit" class="btn btn-outline-danger modifyButton" id="block-btn">Block
+                            </button>
+                        </form>
+                    </div>
+
+                </td>
+
+                <td th:if="${user.isAdmin() == true}">
+
+                    <div th:if="${user.isDeleted() == true}">
+
+                        <span style="text-align: center">Deleted</span>
+
+                    </div>
+
+                    <div th:unless="${user.isDeleted() == true}">
+
+                        <p style="text-align: center">N/A</p>
+
+                    </div>
+
+                </td>
+
+                <td th:unless="${user.isAdmin() == true}">
+
+                    <div th:if="${user.isDeleted() == false}">
+                        <form class="formBox modifyButton" action="#"
+                              th:action="@{/admins/v2/modify/{id}/delete(id=${user.getId()})}" method="post">
+                            <div class="mb-3" style="visibility: hidden !important; display: none !important">
+                                <label class="form-label"
+                                       style="visibility: hidden !important; display: none !important"></label>
+                                <input type="text" class="form-control" th:value="${user.getId()}"
+                                       style="visibility: hidden !important; display: none !important">
+                            </div>
+                            <button type="submit" class="btn btn-outline-danger modifyButton" id="delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this account?')">Delete
+                            </button>
+                        </form>
+                    </div>
+
+                    <div th:unless="${user.isDeleted() == false}" style="text-align: center">Deleted</div>
+
+                </td>
+
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="clearfix"></div>
+
+</main>
+
+<footer th:replace="footer.html :: footer"></footer>
+
+<script>
+    $.extend($.fn.dataTable.defaults, {
+        searching: false,
+        ordering: false
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
+
+<script>
+    $('#submit-button').on('click', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: 'localhost:8080/api/users',
+            method: 'POST',
+            data: {
+                username: $('#username').val(),
+                first_name: $('#firstName').val(),
+                email: $('#email').val(),
+                sortBy: $('#sortBy').val(),
+                sortOrder: $('#sortOrder').val()
+            }
+        });
+    });
+</script>
+
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+
+</body>
+</html>

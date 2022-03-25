@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Account activated</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+
+<main>
+
+    <div class="w3-cell-row" style="width:90%; margin-top:40px; margin-bottom: 60px">
+
+        <div class="w3-container w3-white w3-cell">
+
+            <img style="margin-left: 46.5%" src="https://res.cloudinary.com/tddvjavaforum/image/upload/c_scale,w_269/v1647779369/TDDVForumPictures/green-tick_srteou.jpg">
+
+        </div>
+
+    </div>
+
+
+    <div class="w3-cell-row" style="width:100%; text-align: center">
+
+        <div class="w3-container w3-white w3-cell" style="margin-bottom: 160px">
+            <span style="font-size: 24px; font-weight: bold; color: green">
+                Your account has been successfully activated!
+                <br>
+                <br>
+                You can now log in and access your account.
+            </span>
+        </div>
+
+    </div>
+
+
+
+</main>
+
+
+<footer th:replace="footer.html :: footer">  </footer>
+
+
+</body>
+</html>

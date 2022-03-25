@@ -1,0 +1,13 @@
+package com.forum.javaforum;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class JavaforumApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Activation failed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+
+<main>
+
+    <div class="w3-cell-row" style="width:90%; margin-top:40px; margin-bottom: 60px">
+
+        <div class="w3-container w3-white w3-cell">
+
+            <img style="margin-left: 46.5%" src="https://res.cloudinary.com/tddvjavaforum/image/upload/c_scale,w_303/v1647779616/TDDVForumPictures/red-cross_ucv6o7.png">
+
+        </div>
+
+    </div>
+
+
+    <div class="w3-cell-row" style="width:100%; text-align: center; margin-bottom: 250px">
+
+        <div class="w3-container w3-white w3-cell" >
+            <span style="font-size: 24px; font-weight: bold; color: red" th:text="${errorMessage}">Random error message</span>
+        </div>
+
+        <form class = "formBox" th:action="@{/auth/request-token}" method="get">
+            <button type="submit" class="btn btn-outline-success btn-lg">Request new email</button>
+        </form>
+
+
+
+    </div>
+
+
+</main>
+
+
+<footer th:replace="footer.html :: footer">  </footer>
+
+
+</body>
+</html>

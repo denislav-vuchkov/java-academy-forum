@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Not found</title>
+    <link href="../static/css/style.css" rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+
+<main>
+
+    <div class="w3-cell-row" style="width:100%; margin-top:140px; margin-bottom: 80px">
+
+        <div class="w3-container w3-white w3-cell" id = "profileInformation">
+
+            <img style="margin-left: 34%" id="error404picture" src="https://res.cloudinary.com/tddvjavaforum/image/upload/c_scale,w_703/v1647017051/page-404_gyiain.jpg"
+                 th:src="@{//res.cloudinary.com/tddvjavaforum/image/upload/c_scale,w_703/v1647017051/page-404_gyiain.jpg}">
+
+        </div>
+
+    </div>
+
+    <div class="w3-cell-row" style="width:100%; text-align: center; margin-bottom: 120px; margin-left: 55px">
+
+        <div class="w3-container w3-white w3-cell" style="text-align: center">
+            <h2 th:text="${errorMessage.toString()}" style="color: black; text-align: center">Dummy text goes here</h2>
+        </div>
+
+    </div>
+
+
+</main>
+
+<footer th:replace="footer.html :: footer">  </footer>
+
+</body>
+</html>

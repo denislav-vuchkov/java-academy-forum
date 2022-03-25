@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Post</title>
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+
+<form style="height: 80%; width: 80%; margin-left: 10%; margin-right: 10%" th:fragment="post-form" action="#"
+      th:action="@{__${#httpServletRequest.requestURI}__}" th:object="${post}" method="post">
+    <br>
+
+    <label style="position: center" class="error" th:errors="*{title}">Title error placeholder</label>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" style="background-color: #007AFF; color: white"
+                  id="inputGroup-sizing-default"><b th:text="#{post.label.title}">Title</b></span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input"
+               aria-describedby="inputGroup-sizing-default" placeholder="Something meaningful..." th:field="*{title}"/>
+    </div>
+
+    <label style="position: center" class="error" th:errors="*{content}">Content error placeholder</label>
+    <label style="background-color: #007AFF; color: white" class="input-group-text"><b
+            th:text="#{publication.label.content}">Content</b></label>
+    <div class="input-group">
+        <div class="input-group-prepend">
+        </div>
+        <textarea class="form-control" rows="15" placeholder="Bare your soul here..." th:field="*{content}"></textarea>
+    </div>
+
+    <br>
+
+    <div style="justify-content: center" class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" style="background-color: #007AFF; color: white; height: fit-content"><b
+                    th:text="#{post.label.tags}">Tags</b></span>
+        </div>
+
+        <textarea type="text" style="float:left; margin-left: 5px; resize: none;height: fit-content" rows="1"
+                  th:field="*{tag1}"></textarea>
+        <textarea type="text" style="float:left; margin-left: 5px; resize: none;height: fit-content" rows="1"
+                  th:field="*{tag2}"></textarea>
+        <textarea type="text" style="float:left; margin-left: 5px; resize: none;height: fit-content" rows="1"
+                  th:field="*{tag3}"></textarea>
+        <textarea type="text" style="float:left; margin-left: 5px; resize: none;height: fit-content" rows="1"
+                  th:field="*{tag4}"></textarea>
+        <textarea type="text" style="float:left; margin-left: 5px; resize: none;height: fit-content" rows="1"
+                  th:field="*{tag5}"></textarea>
+
+        <div class="input-group-append">
+            <span class="input-group-text"
+                  style="background-color: #007AFF; margin-left: 5px; color: white; height: fit-content"><b
+                    th:text="#{post.label.tags}">Tags</b></span>
+        </div>
+
+        <label style="position: center" class="error" th:errors="*{tag1}">Content error placeholder</label>
+        <label style="position: center" class="error" th:errors="*{tag2}">Content error placeholder</label>
+        <label style="position: center" class="error" th:errors="*{tag3}">Content error placeholder</label>
+        <label style="position: center" class="error" th:errors="*{tag4}">Content error placeholder</label>
+        <label style="position: center" class="error" th:errors="*{tag5}">Content error placeholder</label>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block"><b th:text="#{submit.publication}">Submit</b></button>
+</form>
+
+</body>
+</html>
+

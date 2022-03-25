@@ -1,0 +1,77 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!--DataTables-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+
+<main>
+
+    <form class="formBox" action="#" th:action="@{/auth/register}" th:object="${registerDTO}" method="post" style="width: 100%; padding-left: 40%; padding-right: 10%; padding-bottom: 100px">
+
+        <div class="w3-container w3-white w3-cell">
+
+            <div class="formOverAllHeading" style="text-align: left; width: 100%">
+                <p>Please enter your details</p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" th:field="*{username}">
+                <label class="error" th:errors="*{username}">Error placeholder</label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">First name</label>
+                <input type="text" class="form-control" th:field="*{firstName}">
+                <label class="error" th:errors="*{firstName}">Error placeholder</label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Last name</label>
+                <input type="text" class="form-control" th:field="*{lastName}">
+                <label class="error" th:errors="*{lastName}">Error placeholder</label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="text" class="form-control" th:field="*{email}">
+                <label class="error" th:errors="*{email}">Error placeholder</label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" th:field="*{password}">
+                <label class="error" th:errors="*{password}">Error placeholder</label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Confirm password</label>
+                <input type="password" class="form-control" th:field="*{passwordConfirm}">
+                <label class="error" th:errors="*{passwordConfirm}">Error placeholder</label>
+            </div>
+            <button type="submit" class="btn btn-outline-success btn-lg">Register</button>
+
+        </div>
+
+    </form>
+
+
+</main>
+
+
+<footer th:replace="footer.html :: footer"></footer>
+
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <!--    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!--Statistics styles-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
+
+    <!--DataTables-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+</head>
+<body class="bg-default">
+
+<nav th:fragment="navbar" style="z-index: 999">
+    <p><a class="navigation" href="index.html" th:href="@{/}">Java Forum</a></p>
+    <ol>
+        <li><a class="navigation">Menu</a>
+            <ol>
+                <li><a href="index.html" th:href="@{/}">Home</a></li>
+                <li th:if="${isAuthenticated == false}"><a href="login.html" th:href="@{/auth/login}">Login</a></li>
+                <li th:if="${isAuthenticated == false}"><a href="register.html" th:href="@{/auth/register}">Register</a>
+                </li>
+                <li th:if="${isAuthenticated}"><a href="posts.html" th:href="@{/posts}">View posts</a></li>
+                <li th:if="${isAuthenticated && !currentUser.isBlocked()}"><a href="post-new.html"
+                                                                              th:href="@{/posts/new}">Create post</a>
+                </li>
+                <li th:if="${isAuthenticated}"><a href="user.html" th:href="@{/users/{id}(id=${currentUser.getId()})}">Profile</a>
+                </li>
+                <li th:if="${isAuthenticated}"><a href="users.html" th:href="@{/users}">Browse users</a></li>
+                <li th:if="${isAuthenticated}"><a href="admins.html" th:href="@{/admins}">Browse admins</a></li>
+                <li th:if="${isAuthenticated == true && currentUser.isAdmin() == true}"><a href="modify-rights.html" th:href="@{/admins/v1/modify}">Modify Rights - 1</a></li>
+                <li th:if="${isAuthenticated == true && currentUser.isAdmin() == true}"><a href="modify-rights-option2.html" th:href="@{/admins/v2/modify}">Modify Rights - 2</a></li>
+                <li th:if="${isAuthenticated == true && currentUser.isAdmin() == true}"><a href="modify-rights-option3.html" th:href="@{/admins/v3/modify}">Modify Rights - 3</a></li>
+                <li th:if="${isAuthenticated}"><a href="#" th:href="@{/swagger-ui/}">Rest APIs</a></li>
+                <li th:if="${isAuthenticated}"><a href="#" th:href="@{/auth/logout}">Log out</a></li>
+            </ol>
+        </li>
+    </ol>
+</nav>
+
+<div class="main-content">
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-6">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Registered Users</h5>
+                                        <span class="h2 font-weight-bold mb-0 counter"
+                                              th:text="${registeredUsersCount}">350897</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Admins</h5>
+                                        <span class="h2 font-weight-bold mb-0 counter"
+                                              th:text="${adminsCount}">2356</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Posts</h5>
+                                        <span class="h2 font-weight-bold mb-0 counter"
+                                              th:text="${postsCount}">924</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Comments</h5>
+                                        <span class="h2 font-weight-bold mb-0 counter"
+                                              th:text="${commentCount}">1234</span>
+                                        <!--                                        <h5 class="card-title text-uppercase text-muted mb-0">Average posts per-->
+                                        <!--                                            user</h5>-->
+                                        <!--                                        <span class="h2 font-weight-bold mb-0 counter"-->
+                                        <!--                                              th:text="${averagePublicationsPerPerson}">5</span>-->
+
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                                            <i class="fa fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+
+    <main>
+        <div style="justify-content: center">
+            <div id="carouselExampleFade" class="carousel slide carousel-fade" data-ride="carousel"
+                 style="margin-left: 10%;margin-right: 10%">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleFade" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleFade" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleFade" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+
+                    <div class="carousel-item active"
+                         style="background-image: url('https://wallpaperaccess.com/full/383168.jpg'); border-radius: 5%; border: solid">
+                        <div class="w3-cell-row">
+                            <div th:if="${mostRecentPosts.isEmpty()}">
+                                <h2 th:text="#{posts.title.empty}" class="statisticsTableHeadings">No Posts</h2>
+                            </div>
+                            <div th:unless="${mostRecentPosts.isEmpty()}">
+                                <h2 class="statisticsTableHeadings">Top 10 most recent publications</h2>
+                                <div class="table">
+                                    <table class="table table-fluid display cell-border" id="mostRecentTable"
+                                           style="border: solid; padding-top: 0">
+                                        <thead>
+                                        <tr>
+                                            <th class="column_label" style="column-width: min-content">#</th>
+                                            <th class="column_label" style="column-width: fill-available"
+                                                th:text="#{post.label.title}">Title
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"
+                                                th:text="#{post.label.author}">Author
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"
+                                                th:text="#{publication.label.date}">Published
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"><img
+                                                    src="../static/images/post-liked.png" width="25" height="25"
+                                                    th:src="@{/images/post-liked.png}" alt="Sort By Likes"/></th>
+                                            <th class="column_label" style="column-width: min-content"><img
+                                                    src="../static/images/post-commented.png" width="25" height="25"
+                                                    th:src="@{/images/post-commented.png}" alt="Sort By Comments"/></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="post, iterator : ${mostRecentPosts}">
+                                            <th th:text="${iterator.index} + 1" scope="row"></th>
+                                            <td><h5 style="white-space: nowrap">
+                                                <a href="#" th:href="@{/posts/{id}(id=${post.getId()})}"
+                                                   th:text="${post.getTitle()}">Demo Post Title</a>
+                                            </h5>
+                                            </td>
+                                            <td style="justify-content: center">
+                                                <a th:href="@{/users/{id}(id=${post.getAuthor().getId()})}">
+                                                    <button style="width: 130px" type="button"
+                                                            class="btn btn-outline-dark btn-sm"><b
+                                                            th:text="${post.getAuthor().getUsername()}">userName</b>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                            <td th:text="${post.getDate().toLocalDate()}">31/12/1999</td>
+                                            <td th:text="${post.getLikes().size()}">5</td>
+                                            <td th:text="${post.getComments().size()}">8</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="carousel-item"
+                         style="background-image: url('https://wallpaperaccess.com/full/383168.jpg'); border-radius: 5%; border: solid">
+                        <div class="w3-cell-row">
+                            <div th:if="${mostCommentedPosts.isEmpty()}">
+                                <h2 th:text="#{posts.title.empty}" class="statisticsTableHeadings">No Posts</h2>
+                            </div>
+                            <div th:if="${mostCommentedPosts.isEmpty() == false}">
+                                <h2 class="statisticsTableHeadings">Top 10 most commented publications</h2>
+                                <div class="table">
+
+                                    <table class="table table-fluid display cell-border" id="mostCommentedTable"
+                                           style="border: solid; padding-top: 0">
+                                        <thead>
+                                        <tr>
+                                            <th class="column_label" style="column-width: min-content">#</th>
+                                            <th class="column_label" style="column-width: fill-available"
+                                                th:text="#{post.label.title}">Title
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"
+                                                th:text="#{post.label.author}">Author
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"
+                                                th:text="#{publication.label.date}">Published
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"><img
+                                                    src="../static/images/post-liked.png" width="25" height="25"
+                                                    th:src="@{/images/post-liked.png}" alt="Sort By Likes"/></th>
+                                            <th class="column_label" style="column-width: min-content"><img
+                                                    src="../static/images/post-commented.png" width="25" height="25"
+                                                    th:src="@{/images/post-commented.png}" alt="Sort By Comments"/></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="post, iterator : ${mostCommentedPosts}">
+                                            <th th:text="${iterator.index} + 1" scope="row"></th>
+                                            <td><h5 style="white-space: nowrap">
+                                                <a href="#" th:href="@{/posts/{id}(id=${post.getId()})}"
+                                                   th:text="${post.getTitle()}">Demo Post Title</a>
+                                            </h5>
+                                            </td>
+                                            <td style="justify-content: center">
+                                                <a th:href="@{/users/{id}(id=${post.getAuthor().getId()})}">
+                                                    <button style="width: 130px" type="button"
+                                                            class="btn btn-outline-dark btn-sm"><b
+                                                            th:text="${post.getAuthor().getUsername()}">userName</b>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                            <td th:text="${post.getDate().toLocalDate()}">31/12/1999</td>
+                                            <td th:text="${post.getLikes().size()}">5</td>
+                                            <td th:text="${post.getComments().size()}">8</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="carousel-item"
+                         style="background-image: url('https://wallpaperaccess.com/full/383168.jpg'); border-radius: 5%; border: solid">
+                        <div class="w3-cell-row">
+                            <div th:if="${mostLikedPosts.isEmpty()}">
+                                <h2 th:text="#{posts.title.empty}" class="statisticsTableHeadings">No Posts</h2>
+                            </div>
+                            <div th:if="${mostLikedPosts.isEmpty() == false}">
+                                <h2 class="statisticsTableHeadings">Top 10 most liked publications</h2>
+                                <div class="table">
+                                    <table class="table table-fluid display cell-border" id="mostLikedTable"
+                                           style="border: solid; padding-top: 0">
+                                        <thead>
+                                        <tr>
+                                            <th class="column_label" style="column-width: min-content">#</th>
+                                            <th class="column_label" style="column-width: fill-available"
+                                                th:text="#{post.label.title}">Title
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"
+                                                th:text="#{post.label.author}">Author
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"
+                                                th:text="#{publication.label.date}">Published
+                                            </th>
+                                            <th class="column_label" style="column-width: min-content"><img
+                                                    src="../static/images/post-liked.png" width="25" height="25"
+                                                    th:src="@{/images/post-liked.png}" alt="Sort By Likes"/></th>
+                                            <th class="column_label" style="column-width: min-content"><img
+                                                    src="../static/images/post-commented.png" width="25" height="25"
+                                                    th:src="@{/images/post-commented.png}" alt="Sort By Comments"/></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="post, iterator : ${mostLikedPosts}">
+                                            <th th:text="${iterator.index} + 1" scope="row"></th>
+                                            <td><h5 style="white-space: nowrap">
+                                                <a href="#" th:href="@{/posts/{id}(id=${post.getId()})}"
+                                                   th:text="${post.getTitle()}">Demo Post Title</a>
+                                            </h5>
+                                            </td>
+                                            <td style="justify-content: center">
+                                                <a th:href="@{/users/{id}(id=${post.getAuthor().getId()})}">
+                                                    <button style="width: 130px" type="button"
+                                                            class="btn btn-outline-dark btn-sm"><b
+                                                            th:text="${post.getAuthor().getUsername()}">userName</b>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                            <td th:text="${post.getDate().toLocalDate()}">31/12/1999</td>
+                                            <td th:text="${post.getLikes().size()}">5</td>
+                                            <td th:text="${post.getComments().size()}">8</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleFade" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<footer th:replace="footer.html :: footer"></footer>
+
+<script>
+    $(document).ready(function () {
+        $('.counter').each(function () {
+            $(this).prop('Counter', 0).animate({
+                Counter: $(this).text()
+            }, {
+                duration: 4000,
+                easing: 'swing',
+                step: function (now) {
+                    $(this).text(Math.ceil(now));
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#mostRecentTable').DataTable();
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#mostCommentedTable').DataTable();
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#mostLikedTable').DataTable();
+    });
+</script>
+
+<script>
+    $.extend($.fn.dataTable.defaults, {
+        searching: false,
+        ordering: false,
+        paging: false,
+        info: false
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+
+</body>
+</html>

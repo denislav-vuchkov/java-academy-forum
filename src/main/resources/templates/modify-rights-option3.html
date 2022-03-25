@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modify user rights</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <!--Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!--DataTables-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+    <style>
+        .row {
+            border-color: grey;
+            border-style: solid;
+            border-left: hidden;
+            border-right: hidden;
+            border-top: hidden;
+            border-width: 1px;
+            padding-bottom: 30px;
+            padding-top: 30px;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+
+<div class="row" style="width: 70%; margin-left: 15%">
+    <div class="col">
+        <h1 style="padding-top: 25px; text-align: center; color: darkblue">Type of operation</h1>
+    </div>
+
+    <div class="col">
+        <h1 style="padding-top: 25px; text-align: center; color: darkblue">Narrow users by username (optional)</h1>
+    </div>
+
+    <div class="col">
+        <h1 style="padding-top: 25px; text-align: center; color: darkblue">Select and execute</h1>
+    </div>
+
+</div>
+
+
+<div class="row" style="width: 70%; margin-left: 15%">
+    <div class="col">
+        <h2 style="padding-top: 35px; text-align: center; color: black">Grant admin rights</h2>
+    </div>
+
+    <div class="col" style="margin-top: 10px">
+        <form class="formBox" th:action="@{/admins/v3/modify/filter-non-admins}" method="post">
+
+            <input th:name="nonAdminUsername" type="text" class="form-control" aria-describedby="emailHelp">
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-secondary btn-lg executeBtn">Search</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col">
+        <form style="padding-top: 40px" class="formBox" th:action="@{/admins/v3/modify/grant-rights}" method="post">
+
+            <select th:name="makeAdminID" class="form-control select" aria-label="Default select example" style="width: 200px !important;">
+                <option selected value=null>Select user</option>
+                <option th:each="user : ${nonAdmins}"
+                        th:value="${user.getId()}"
+                        th:text="${user.getUsername()}">
+                </option>
+            </select>
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-success btn-lg executeBtn">Execute</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+
+<div class="row" style="width: 70%; margin-left: 15%">
+    <div class="col">
+        <h2 style="padding-top: 35px; text-align: center; color: black">Remove admin rights</h2>
+    </div>
+
+    <div class="col" style="margin-top: 10px">
+        <form class="formBox" th:action="@{/admins/v3/modify/filter-admins}" method="post">
+
+            <input th:name="adminUsername" type="text" class="form-control" aria-describedby="emailHelp">
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-secondary btn-lg executeBtn" style="font-size: 18px">Search</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col">
+        <form style="padding-top: 40px" class="formBox" th:action="@{/admins/v3/modify/remove-rights}" method="post">
+
+            <select th:name="removeAdminID" class="form-control select" aria-label="Default select example" style="width: 200px !important;">
+                <option selected value=null>Select user</option>
+                <option th:each="user : ${admins}"
+                        th:value="${user.getId()}"
+                        th:text="${user.getUsername()}">
+                </option>
+            </select>
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-danger btn-lg executeBtn">Execute</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+
+<div class="row" style="width: 70%; margin-left: 15%">
+    <div class="col">
+        <h2 style="padding-top: 35px; text-align: center; color: black">Unblock user</h2>
+    </div>
+
+    <div class="col" style="margin-top: 10px">
+        <form class="formBox" th:action="@{/admins/v3/modify/filter-blocked}" method="post">
+
+            <input th:name="blockedUsername" type="text" class="form-control" aria-describedby="emailHelp">
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-secondary btn-lg executeBtn" style="font-size: 18px">Search</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col">
+        <form style="padding-top: 40px" class="formBox" th:action="@{/admins/v3/modify/unblock}" method="post">
+
+            <select th:name="unblockID" class="form-control select" aria-label="Default select example" style="width: 200px !important;">
+                <option selected value=null>Select user</option>
+                <option th:each="user : ${blockedUsers}"
+                        th:value="${user.getId()}"
+                        th:text="${user.getUsername()}">
+                </option>
+            </select>
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-success btn-lg executeBtn">Execute</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+
+<div class="row" style="width: 70%; margin-left: 15%">
+    <div class="col">
+        <h2 style="padding-top: 35px; text-align: center; color: black">Block user</h2>
+    </div>
+
+    <div class="col" style="margin-top: 10px">
+        <form class="formBox" th:action="@{/admins/v3/modify/filter-unblocked}" method="post">
+
+            <input th:name="unblockedUsername" type="text" class="form-control" aria-describedby="emailHelp">
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-secondary btn-lg executeBtn" style="font-size: 18px">Search</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col">
+        <form style="padding-top: 40px" class="formBox" th:action="@{/admins/v3/modify/block}" method="post">
+
+            <select th:name="blockID" class="form-control select" aria-label="Default select example" style="width: 200px !important;">
+                <option selected value=null>Select user</option>
+                <option th:each="user : ${unblockedUsers}"
+                        th:value="${user.getId()}"
+                        th:text="${user.getUsername()}">
+                </option>
+            </select>
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-danger btn-lg executeBtn">Execute</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+
+<div class="row" style="width: 70%; margin-left: 15%">
+    <div class="col">
+        <h2 style="padding-top: 35px; text-align: center; color: black">Delete user</h2>
+    </div>
+
+    <div class="col" style="margin-top: 10px">
+        <form class="formBox" th:action="@{/admins/v3/modify/filter-non-deleted}" method="post">
+
+            <input th:name="nonDeletedUsername" type="text" class="form-control" aria-describedby="emailHelp">
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-secondary btn-lg executeBtn" style="font-size: 18px">Search</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col">
+        <form style="padding-top: 40px" class="formBox" th:action="@{/admins/v3/modify/delete}" method="post">
+
+            <select th:name="deleteID" class="form-control select" aria-label="Default select example" style="width: 200px !important;">
+                <option selected value=null>Select user</option>
+                <option th:each="user : ${nonDeletedUsers}"
+                        th:value="${user.getId()}"
+                        th:text="${user.getUsername()}">
+                </option>
+            </select>
+
+            <div class="w3-container w3-cell">
+                <button type="submit" class="btn btn-outline-danger btn-lg executeBtn" onclick="return confirm('Are you sure you want to delete this account?')">Execute</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+
+<footer th:replace="footer.html :: footer"></footer>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo Edit</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!--DataTables-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+    <style>
+        .image-preview {
+            width: 300px;
+            min-height: 100px;
+            border: 2px solid lightgrey;
+            margin-top: 15px;
+
+            /*For the default text*/
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: lightgrey;
+        }
+
+        .image-preview__image {
+            display: none;
+            width: 100%;
+        }
+
+        img{
+            max-width:350px;
+            max-height:350px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<nav th:replace="index.html :: navbar"></nav>
+
+
+<main>
+
+    <div class="w3-cell-row" style="width:70%; margin-left: 100px;">
+
+        <div class="w3-container w3-cell" th:if="${user.getPhoto() != null}">
+
+            <p class="profileHeadingInfo">Current Picture</p>
+
+            <img style="margin-left: 10%; margin-bottom: 30px; margin-top: 30px" th:src="${user.getPhoto().getPhoto()}">
+
+            <div style="padding-left: 45px" class="w3-container w3-cell">
+                <a href="#" th:href="@{/users/{id}/photo/delete(id=${user.getId()})}" class="btn btn-outline-danger btn-lg" role="button" aria-pressed="true">Delete</a>
+            </div>
+
+        </div>
+
+        <div style="padding-bottom: 400px" class="w3-container w3-cell">
+
+
+        </div>
+
+        <div style="padding-bottom: 400px" class="w3-cell-row" th:if="${currentUser.getId() == user.getId()}">
+
+            <form class="formBox" id="form" enctype="multipart/form-data" th:action="@{/users/photo/upload}" th:object="${photoDTO}" method="post">
+
+            <p class="profileHeadingInfo">Upload a picture</p>
+
+            <input type="file" multiple="multiple" th:field="*{photo}" name="inpFile" id="inpFile" style="padding-left: 55px; padding-top: 15px">
+
+            <div style="padding-left: 55px" class="w3-container w3-cell">
+                <div class="image-preview" id="imagePreview">
+                    <img src="" alt="Image Preview" class="image-preview__image">
+                    <span class="image-preview__default-text">Image preview</span>
+
+                </div>
+
+            </div>
+
+            <div class="w3-cell-row w3-cell">
+                <button type="submit" class="btn btn-outline-success btn-lg" id="submit-button">Upload</button>
+            </div>
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<footer th:replace="footer.html :: footer"></footer>
+
+<!--Script for sending a multipart file-->
+
+<!--<script>
+    uploadPhoto()
+
+    function uploadPhoto() {
+        const form = document.getElementById("form");
+        const inputFile = document.getElementById("inpFile");
+
+        const formData = new FormData();
+
+        const handleSubmit = (event) => {
+            event.preventDefault();
+
+            for (const file of inputFile.files) {
+                formData.append("file", file);
+            }
+
+            fetch("http://localhost:8080/users/photo/upload", {
+                method: "post",
+                body: formData,
+            }).catch((error) => ("Something went wrong!", error));
+
+        };
+
+        form.addEventListener("submit", handleSubmit);
+    }
+
+</script>-->
+
+<!--Script for the image preview-->
+
+<script>
+    const inpFile = document.getElementById("inpFile");
+    const previewContainer = document.getElementById("imagePreview");
+    const previewImage = previewContainer.querySelector(".image-preview__image");
+    const previewDefaultText = previewContainer.querySelector(".image-preview__default-text");
+
+    inpFile.addEventListener("change", function () {
+        const file = this.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            previewDefaultText.style.display = "none";
+            previewImage.style.display = "block";
+
+            reader.addEventListener("load", function () {
+                previewImage.setAttribute("src", this.result);
+            })
+
+            reader.readAsDataURL(file);
+
+        } else {
+            previewDefaultText.style.display = null;
+            previewImage.style.display = null;
+            previewImage.setAttribute("src", "");
+        }
+
+    })
+
+</script>
+
+</body>
+</html>
